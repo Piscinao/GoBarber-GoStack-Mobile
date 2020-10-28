@@ -4,6 +4,7 @@ export const Container = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
+  padding: 0 30px; // nada fica encostando nas laterais
 `;
 
 // encadeamento de estilos não tem no react-native
