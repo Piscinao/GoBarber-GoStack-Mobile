@@ -22,6 +22,6 @@ export const TextInput = styled.TextInput`
 `;
 
 export const Icon = styled(FeatherIcon)`
-  // Distanciar o texto do ícone
+  /* // Distanciar o texto do ícone */
   margin-right: 16px;
 `;
