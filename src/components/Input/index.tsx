@@ -1,10 +1,10 @@
 import React, {
   useEffect,
+  useCallback,
   useState,
   useRef,
   useImperativeHandle,
   forwardRef,
-  useCallback,
 } from 'react';
 // useImperativeHandle passa uma função do componente filho para o componente pai
 import {TextInputProps} from 'react-native';
@@ -15,6 +15,7 @@ import {Container, TextInput, Icon} from './styles';
 interface InputProps extends TextInputProps {
   name: string;
   icon: string;
+  containerStyle?: object;
 }
 
 interface InputValueReference {
@@ -27,7 +28,7 @@ interface InputRef {
 
 //ref é uma propriedade que não pode acessar como prop comum do elemento
 const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
-  {name, icon, ...rest},
+  {name, icon, containerStyle = {}, ...rest},
   ref,
 ) => {
   const inputElementRef = useRef<any>(null);
@@ -54,6 +55,10 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
     // }
   }, []);
 
+  useEffect(() => {
+    inputValueRef.current.value = defaultValue;
+  }, [defaultValue]);
+
   // metodo dentro de um componente filho *componente pai é o input
   useImperativeHandle(ref, () => ({
     focus() {
@@ -66,18 +71,18 @@ const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
       name: fieldName,
       ref: inputValueRef.current,
       path: 'value',
-      setValue(ref: any, value) {
+      setValue(ref: any, value: string) {
         inputValueRef.current.value = value;
         inputElementRef.current.setNativeProps({text: value});
       },
-      clearValue() {
+      clearValue(ref: any) {
         inputValueRef.current.value = '';
         inputElementRef.current.clear();
       },
     });
   }, [fieldName, registerField]);
   return (
-    <Container isFocused={isFocused}>
+    <Container style={containerStyle} isFocused={isFocused} isErrored={!!error}>
       <Icon
         name={icon}
         size={20}
