@@ -44,8 +44,8 @@ const SignIn: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
-  const {signIn, user} = useAuth();
-  console.log(user);
+  const {signIn} = useAuth();
+
   // manipula a ação do input aparece depois do .current
   // passwordInputRef.current.focus;
 
