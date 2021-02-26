@@ -39,9 +39,21 @@ const Dashboard: React.FC = () => {
     });
   }, []);
 
-  const handleSelectProvider = useCallback(
+  // const handleSelectProvider = useCallback(
+  //   (providerId: string) => {
+  //     navigation.navigate('AppointmentDatePicker', {providerId});
+  //   },
+  //   [navigation],
+  // );
+
+  const navigateToProfile = useCallback(() => {
+    signOut();
+    // navigation.navigate('AppointmentDatePicker', {providerId});
+  }, [signOut]);
+
+  const navigateToCreateAppointment = useCallback(
     (providerId: string) => {
-      navigation.navigate('AppointmentDatePicker', {providerId});
+      navigation.navigate('CreateAppointment', {providerId});
     },
     [navigation],
   );
@@ -54,7 +66,7 @@ const Dashboard: React.FC = () => {
           <UserName>{user.name}</UserName>
         </HeaderTitle>
 
-        <ProfileButton onPress={() => navigation.navigate('Profile')}>
+        <ProfileButton onPress={navigateToProfile}>
           <UserAvatar source={{uri: user.avatar_url}} />
         </ProfileButton>
       </Header>
@@ -66,7 +78,8 @@ const Dashboard: React.FC = () => {
           <ProvidersListTitle>Cabelereiros</ProvidersListTitle>
         }
         renderItem={({item: provider}) => (
-          <ProviderContainer onPress={() => handleSelectProvider(provider.id)}>
+          <ProviderContainer
+            onPress={() => navigateToCreateAppointment(provider.id)}>
             <ProviderAvatar source={{uri: provider.avatar_url}} />
 
             <ProviderInfo>
