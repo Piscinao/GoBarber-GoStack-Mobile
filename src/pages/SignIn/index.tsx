@@ -2,22 +2,20 @@ import React, {useCallback, useRef} from 'react';
 import {
   Image,
   View,
+  ScrollView,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   TextInput,
   Alert,
 } from 'react-native';
-
 import Icon from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 import * as Yup from 'yup';
+
 import {Form} from '@unform/mobile';
 import {FormHandles} from '@unform/core';
 
 import {useAuth} from '../../hooks/auth';
-
-import getValidationErrors from '../../utils/getValidationErros';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -32,6 +30,7 @@ import {
   CreateAccountButton,
   CreateAccountButtonText,
 } from './styles';
+import getValidationErrors from '../../utils/getValidationErros';
 
 interface SignInFormData {
   email: string;
@@ -39,15 +38,12 @@ interface SignInFormData {
 }
 
 const SignIn: React.FC = () => {
-  // manipulacao direta do form
   const formRef = useRef<FormHandles>(null);
   const passwordInputRef = useRef<TextInput>(null);
+
   const navigation = useNavigation();
 
   const {signIn} = useAuth();
-
-  // manipula a ação do input aparece depois do .current
-  // passwordInputRef.current.focus;
 
   const handleSignIn = useCallback(
     async (data: SignInFormData) => {
@@ -58,7 +54,7 @@ const SignIn: React.FC = () => {
           email: Yup.string()
             .required('E-mail obrigatório')
             .email('Digite um e-mail válido'),
-          password: Yup.string().required('Senha é obrigatória'),
+          password: Yup.string().required('Senha obrigatória'),
         });
         // Dados que foram recebidos do input
         await schema.validate(data, {
@@ -73,6 +69,8 @@ const SignIn: React.FC = () => {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
+          console.log(errors);
+
           formRef.current?.setErrors(errors);
 
           return;
@@ -80,7 +78,7 @@ const SignIn: React.FC = () => {
 
         Alert.alert(
           'Erro na autenticação',
-          'Ocorreu um erro ao fazer login, cheque suas credenciais.',
+          'Ocorreu um erro ao fazer login, cheque as credenciais.',
         );
         // metodo de dentro do componente que é disparado no hook
         // addToast({
@@ -104,9 +102,11 @@ const SignIn: React.FC = () => {
           contentContainerStyle={{flex: 1}}>
           <Container>
             <Image source={logoImg} />
+
             <View>
-              <Title>Faça seu Logon</Title>
+              <Title>Faça seu logon</Title>
             </View>
+
             <Form ref={formRef} onSubmit={handleSignIn}>
               <Input
                 autoCorrect={false}
@@ -120,6 +120,7 @@ const SignIn: React.FC = () => {
                   passwordInputRef.current?.focus();
                 }}
               />
+
               <Input
                 ref={passwordInputRef}
                 name="password"
